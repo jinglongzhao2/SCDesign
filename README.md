@@ -1,0 +1,2 @@
+# SCDesign
+Synthetic Control Design
