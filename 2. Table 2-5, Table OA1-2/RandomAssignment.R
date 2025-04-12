@@ -532,36 +532,6 @@ my_k_means <- function(random.seed_, N.Regions_ = N.Regions, feature.matrix_, mi
   return(returned)
 }
 
-# my_blockTools_blocking <- function(random.seed_, N.Regions_ = N.Regions, feature.matrix_, K.cardinality_ = -1)
-# {
-#   set.seed(random.seed_)
-#   
-#   if(K.cardinality_ == -1)
-#   {
-#     K.cardinality = floor(N.Regions_/2)
-#   }
-#   if(K.cardinality_ >= 1)
-#   {
-#     K.cardinality = K.cardinality_
-#   }
-#   
-#   feature.matrix_ = apply(feature.matrix_, 2, function(x) (x - mean(x)) / sd(x))
-#   my_data_num.columns = ncol(feature.matrix_)
-#   my_data = data.frame(feature.matrix_, seq(1,N.Regions_))
-#   colnames(my_data)[my_data_num.columns+1] = "id"
-#   
-#   cluster_assignments = rep(NA, N.Regions_)
-#   my_blocking = block(my_data, n.tr = K.cardinality, algorithm = "naiveGreedy", id.vars = "id", block.vars = colnames(my_data)[-(my_data_num.columns+1)], distance = "mahalanobis")
-#   for(num.clusters.temp in 1:K.cardinality)
-#   {
-#     cluster.indices = as.numeric(my_blocking$blocks[[1]][,num.clusters.temp])
-#     cluster_assignments[cluster.indices] = num.clusters.temp
-#   }
-#   
-#   returned = list(clusters = cluster_assignments)
-#   return(returned)
-# }
-
 next_power_of_2 <- function(n)
 {
   return(2^ceiling(log2(n + 1)))
@@ -847,8 +817,8 @@ stratified_assignments <- function(random.seed_, N.Regions_ = N.Regions, beta.ve
     # my.blocks = my_blockTools_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
     # my.blocks = my_k_means(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
     
-    # my.blocks = my_MinMaxDiameter_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
-    my.blocks = my_IterMatching_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
+    my.blocks = my_MinMaxDiameter_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
+    # my.blocks = my_IterMatching_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
     
     fitness_ = my.blocks$fitnessValue
     
