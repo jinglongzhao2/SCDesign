@@ -15,34 +15,23 @@ Folder names, file names, usages, and running times:
 
 1. Folder: Figure 4-5, Figure OA5-OA8
 1.1. File: SCdesign_LazyRun.R
-
 ---- Generates one simulation environment as described in Section 5 of our paper.
-
 ---- In generating the simulation environment, need to specify "noise.variance = 1", "noise.variance = 5", or "noise.variance = 10" in Line 131.
-
 ---- Produces Figures 4-5 as described in Section 5.1 of our paper under "noise.variance = 1"; produces Figures OA5-OA8 in Section OA7 in the Online Appendix under "noise.variance = 5" and "noise.variance = 10".
-
 ---- Running time: for each parameter of "noise.variance = 1", "noise.variance = 5", or "noise.variance = 10", running time is less than 1.5 hours.
-
 ---- Output files: 
-
 ------ (1) ObservedData_NoiseVariance=1.png: Figure 4
-
 ------ (2) Residuals_NoiseVariance=1.png: Figure 5
-
 ------ (3) ObservedData_NoiseVariance=5.png: Figure OA5
-
 ------ (4) Residuals_NoiseVariance=5.png: Figure OA6
-
 ------ (5) ObservedData_NoiseVariance=10.png: Figure OA7
-
 ------ (6) Residuals_NoiseVariance=10.png: Figure OA8
 
 
 
 
 
-3. Folder: Table 2-5, Table OA1-2
+2. Folder: Table 2-5, Table OA1-2
 2.1. File: Different_optimization_methods.R
 ---- Generates one simulation environment as described in Section 5 of our paper.
 ---- This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 29 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))". 
