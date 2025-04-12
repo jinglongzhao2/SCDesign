@@ -11,14 +11,13 @@ This is a list of all provided materials' names and usages. All the running time
 
 There are three folders, each containing files to generate a part of the Figures or Tables in the paper.
 
-Folder names, file names, usages, and running times:
+## Folder names, file names, usages, and running times:
 
 ### 1. Folder: Figure 4-5, Figure OA5-OA8
 
 #### 1.1. File: SCdesign_LazyRun.R
 - **Purpose:** Generates one simulation environment as described in Section 5.
-- **Parameters:** In generating the simulation environment, need to specify "noise.variance = 1", "noise.variance = 5", or "noise.variance = 10" in Line 131.
-- **Output Figures:**
+- **Parameters:** In generating the simulation environment, need to specify `noise.variance = 1`, `noise.variance = 5`, or `noise.variance = 10` in Line 131.
   - `noise.variance = 1`: Figures 4–5 in Section 5.1
   - `noise.variance = 5` and `10`: Figures OA5–OA8 in Section OA7
 - **Running time:** for each parameter of "noise.variance = 1", "noise.variance = 5", or "noise.variance = 10", running time is less than 1.5 hours.
@@ -31,36 +30,37 @@ Folder names, file names, usages, and running times:
   - `Residuals_NoiseVariance=10.png` → Figure OA8  
 
 
+---
 
 
+### 2. Folder: Table 2-5, Table OA1-2
 
-2. Folder: Table 2-5, Table OA1-2
-2.1. File: Different_optimization_methods.R
----- Generates one simulation environment as described in Section 5 of our paper.
----- This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 29 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))". 
----- For a test run, set a fixed random seed by commenting out Line 29 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))" and setting "repetition.RANDOM.SEED = 1".
----- For each random seed (e.g., repetition.RANDOM.SEED = 1), produces 6 intermediate files into the "output11" folder.
----- Running time: for each parameter (e.g., repetition.RANDOM.SEED = 1), running time is less than 12 hours.
----- Intermediate output files:
------- (1) 1Different_Optimization_Methods_ATE.txt
------- (2) 1Different_Optimization_Methods_ATE_null_hypothesis.txt
------- (3) 1Different_Optimization_Methods_ATEC.txt: not useful, for sanity check only
------- (4) 1Different_Optimization_Methods_ATET.txt
------- (5) 1Different_Optimization_Methods_ControlWeights.txt: not useful, for sanity check only
------- (6) 1Different_Optimization_Methods_TreatmentWeights.txt: not useful, for sanity check only
+#### 2.1. File: Different_optimization_methods.R
+- **Purpose:** Generates one simulation environment as described in Section 5 of our paper.
+- **Note:**
+  - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` 
+  - For a test run, set a fixed random seed by commenting out Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
+- **Running time:** for each parameter (e.g., repetition.RANDOM.SEED = 1), running time is less than 12 hours.
+- **Output files:** for each random seed (e.g., repetition.RANDOM.SEED = 1), produces 6 intermediate files into the `output11` folder.
+  - `1Different_Optimization_Methods_ATE.txt`
+  - `1Different_Optimization_Methods_ATE_null_hypothesis.txt`
+  - `1Different_Optimization_Methods_ATEC.txt` (for sanity check only)
+  - `1Different_Optimization_Methods_ATET.txt`
+  - `1Different_Optimization_Methods_ControlWeights.txt` (for sanity check only)
+  - `1Different_Optimization_Methods_TreatmentWeights.txt` (for sanity check only)
 
-2.2. File: Analyzing_Outputs.R
----- After running Different_optimization_methods.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 6000 files in the "output11" folder. Run this code to combine all the intermediate files.
----- The output files contain more rows than in the paper. We only present five parameters beta = 0.01, 0.1, 1, 10, 100, five parameters xi = 0.01, 0.1, 1, 10, 100, and five parameters lambda = 0.01, 0.1, 1, 10, 100 in the paper. But the output files contain eight parameters beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, eight parameters xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, and eight parameters lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000.
----- Running time: less than 1 minute.
----- Output files:
------- (1) "DATE"Average_Different_Optimization_Methods_ATE.txt: Table 2
+#### 2.2. File: Analyzing_Outputs.R
+- **Purpose:** After running Different_optimization_methods.R 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 6000 files in the `output11` folder. Run this code to combine all the intermediate files.
+- **Note:** The output files contain more rows than in the paper. We only present five parameters beta = 0.01, 0.1, 1, 10, 100, five parameters xi = 0.01, 0.1, 1, 10, 100, and five parameters lambda = 0.01, 0.1, 1, 10, 100 in the paper. But the output files contain eight parameters beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, eight parameters xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, and eight parameters lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000.
+- **Running time:** less than 1 minute.
+- **Output files:** 
+  - `"DATE"Average_Different_Optimization_Methods_ATE.txt` → Table 2
 ------ (2) "DATE"Average_Different_Optimization_Methods_ATE_null_hypothesis.txt: Table 4
 ------ (3) "DATE"Average_Different_Optimization_Methods_ATEC.txt: not useful, for sanity check only
 ------ (4) "DATE"Average_Different_Optimization_Methods_ATET.txt: Table OA1
 
 2.3. File: Nonlinear2.R
----- Generates one simulation environment as described in Section 5.2.2 of our paper.
+- **Purpose:** Generates one simulation environment as described in Section 5.2.2 of our paper.
 ---- This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 21 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))". 
 ---- For a test run, set a fixed random seed by commenting out Line 21 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))" and setting "repetition.RANDOM.SEED = 1".
 ---- For each random seed (e.g., repetition.RANDOM.SEED = 1), produces 6 intermediate files into the "output11_nonlinear" folder.
@@ -74,7 +74,7 @@ Folder names, file names, usages, and running times:
 ------ (6) 1Different_Optimization_Methods_TreatmentWeights.txt: not useful, for sanity check only
 
 2.4. File: Analyzing_Outputs_Nonlinear2.R
----- After running Nonlinear2.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 6000 files in the "output11_nonlinear" folder. Run this code to combine all the intermediate files.
+- **Purpose:** After running Nonlinear2.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 6000 files in the "output11_nonlinear" folder. Run this code to combine all the intermediate files.
 ---- The output files contain more rows than in the paper. We only present five parameters beta = 0.01, 0.1, 1, 10, 100, five parameters xi = 0.01, 0.1, 1, 10, 100, and five parameters lambda = 0.01, 0.1, 1, 10, 100 in the paper. But the output files contain eight parameters beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, eight parameters xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, and eight parameters lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000.
 ---- Running time: less than 1 minute.
 ---- Output files:
@@ -83,13 +83,8 @@ Folder names, file names, usages, and running times:
 ------ (3) "DATE"Nonlinear2_Average_Different_Optimization_Methods_ATEC.txt: not useful, for sanity check only
 ------ (4) "DATE"Nonlinear2_Average_Different_Optimization_Methods_ATET.txt: Table OA2
 
-2.5. File: rerand.py
----- Created by Max Cytrynbaum.
----- Algorithm for stratification as described in Section 5.2.4 of our paper.
----- Do not need to run this file. This file will be used by RandomAssignment.R to do stratified randomization.
-
-2.6. File: RandomAssignment.R 
----- Generates one simulation environment as described in Section 5.2.4 of our paper.
+2.5. File: RandomAssignment.R 
+- **Purpose:** Generates one simulation environment as described in Section 5.2.4 of our paper.
 ---- This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 35 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))". 
 ---- For a test run, set a fixed random seed by commenting out Line 35 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))" and setting "repetition.RANDOM.SEED = 1".
 ---- For each random seed (e.g., repetition.RANDOM.SEED = 1), produces 5 intermediate files into the "output11_Randomization" folder.
@@ -101,8 +96,8 @@ Folder names, file names, usages, and running times:
 ------ (4) 1RandomAssignment_RARegAdj.txt
 ------ (5) 1RandomAssignment_StADiM.txt
 
-2.7. File: Analyzing_Outputs_RandomAssignment.R 
----- After running RandomAssignment.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 5000 files in the "output11_Randomization" folder. Run this code to combine all the intermediate files.
+2.6. File: Analyzing_Outputs_RandomAssignment.R 
+- **Purpose:** After running RandomAssignment.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 5000 files in the "output11_Randomization" folder. Run this code to combine all the intermediate files.
 ---- Running time: less than 1 minute.
 ---- Output file:
 ------ (1) "DATE"Summary_compare_with_randomization.txt: Table 5
@@ -113,10 +108,10 @@ Folder names, file names, usages, and running times:
 
 3. Folder: Figure 2-3, OA1-4, Table 1
 3.1. File: Walmart.csv
----- Data file from Kaggle
+- **Purpose:** Data file from Kaggle
 
 3.2. File: Walmart_LazyRun.R
----- Reads Walmart.csv data and conducts synthetic control design as described in Section 4 of our paper.
+- **Purpose:** Reads Walmart.csv data and conducts synthetic control design as described in Section 4 of our paper.
 ---- Produces 2 figures of the constrained formulation for each parameter of m-bar = 1, 2, 3, 4, 5, into the "output" folder. How these figures are selected are described in Section 4 of our paper.
 ---- Running time: for all 5 parameters, totaling less than 6 hours.
 ---- Produces some intermediate outputs that will be used in Table 1 of our paper.
@@ -134,13 +129,8 @@ Folder names, file names, usages, and running times:
 ------ (9) Fitted_Y_original_no_covariates_weekly_Constrained_K=5_"DATE".png: not useful
 ------ (10) ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=6_"DATE".png: not useful
 
-3.3. File: rerand.py
----- Created by Max Cytrynbaum.
----- Algorithm for stratification as described in Section 5.2.4 of our paper.
----- Do not need to run this file. This file will be used by Walmart_Randomization.R to do stratified randomization.
-
-3.4. File: Walmart_Randomization.R
----- Generates one simulation as described in Section 4 of our paper.
+3.3. File: Walmart_Randomization.R
+- **Purpose:** Generates one simulation as described in Section 4 of our paper.
 ---- This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 14 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))". 
 ---- For a test run, set a fixed random seed by commenting out Line 14 "repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))" and setting "repetition.RANDOM.SEED = 1".
 ---- For each random seed (e.g., repetition.RANDOM.SEED = 1), produces 5 intermediate files into the "output_Randomization" folder.
@@ -153,7 +143,7 @@ Folder names, file names, usages, and running times:
 ------ (5) 1RandomAssignment_StADiM.txt
 
 3.5. File: Analyzing_Outputs_RandomAssignment.R 
----- After running Walmart_Randomization.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 5000 files in the "output_Randomization" folder. Run this code to combine all the intermediate files.
+- **Purpose:** After running Walmart_Randomization.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 5000 files in the "output_Randomization" folder. Run this code to combine all the intermediate files.
 ---- Run this code to also combine the intermediate file that Walmart_LazyRun.R generated for synthetic control design.
 ---- Running time: less than 1 minute.
 ---- Output file:
