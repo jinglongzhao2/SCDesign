@@ -20,7 +20,7 @@ There are three folders, each containing files to generate a part of the Figures
 - **Note:** In generating the simulation environment, need to specify `noise.variance = 1`, `noise.variance = 5`, or `noise.variance = 10` in Line 131.
   - `noise.variance = 1`: Figures 4–5 in Section 5.1
   - `noise.variance = 5` and `10`: Figures OA5–OA8 in Section OA7
-- **Running time:** for each parameter of "noise.variance = 1", "noise.variance = 5", or "noise.variance = 10", running time is less than 1.5 hours.
+- **Running time:** for each parameter of `noise.variance = 1`, `noise.variance = 5`, or `noise.variance = 10`, running time is less than 1.5 hours.
 - **Output files:** 
   - `ObservedData_NoiseVariance=1.png` → Figure 4  
   - `Residuals_NoiseVariance=1.png` → Figure 5  
