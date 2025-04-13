@@ -74,7 +74,7 @@ There are three folders, each containing files to generate a part of the Figures
   - `1Different_Optimization_Methods_TreatmentWeights.txt` (for sanity check only)
 
 #### 2.4. File: Analyzing_Outputs_Nonlinear2.R
-- **Purpose:** After running Nonlinear2.R 1000 times using 1000 random seeds "repetition.RANDOM.SEED = 1" ~ "repetition.RANDOM.SEED = 1000", there are 6000 files in the "output11_nonlinear" folder. Run this code to combine all the intermediate files.
+- **Purpose:** After running Nonlinear2.R 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 6000 files in the `output11_nonlinear` folder. Run this code to combine all the intermediate files.
 - **Note:** The output files contain more rows than in the paper. We only present five parameters `beta = 0.01, 0.1, 1, 10, 100`, five parameters `xi = 0.01, 0.1, 1, 10, 100`, and five parameters `lambda = 0.01, 0.1, 1, 10, 100` in the paper. But the output files contain eight parameters `beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, eight parameters `xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, and eight parameters `lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`
 - **Running time:** less than 1 minute.
 - **Output files:** 
