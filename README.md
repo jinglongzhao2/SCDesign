@@ -1,5 +1,4 @@
-# SCDesign
-Synthetic Control Design
+# Synthetic Control Design
 
 This is a list of all provided materials' names and usages. All the running times are reported using a personal laptop with the following specifications:
 
