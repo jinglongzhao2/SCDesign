@@ -40,8 +40,8 @@ There are three folders, each containing files to generate a part of the Figures
 - **Note:**
   - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` 
   - For a test run, set a fixed random seed by commenting out Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
-- **Running time:** for each parameter (e.g., repetition.RANDOM.SEED = 1), running time is less than 12 hours.
-- **Intermediate output files:** for each random seed (e.g., repetition.RANDOM.SEED = 1), produces 6 intermediate files into the `output11` folder.
+- **Running time:** for each parameter (e.g., `repetition.RANDOM.SEED = 1`), running time is less than 12 hours.
+- **Intermediate output files:** for each random seed (e.g., `repetition.RANDOM.SEED = 1`), produces 6 intermediate files into the `output11` folder.
   - `1Different_Optimization_Methods_ATE.txt`
   - `1Different_Optimization_Methods_ATE_null_hypothesis.txt`
   - `1Different_Optimization_Methods_ATEC.txt` (for sanity check only)
