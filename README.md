@@ -39,26 +39,23 @@ SyntheticControlDesign/
         output_Randomization/
 ```
 
-The three main folders correspond to different parts of the paper:
+The three main folders generates different tables and figures of the paper.
 
-1. **`Figure 4-5, Figure OA5-OA8/`** reproduces the simulation figures in Section 5 and Section OA7.
-2. **`Table 2-5, Table OA1-2/`** reproduces the main simulation tables and related online appendix tables.
-3. **`Figure 2-3, OA1-4, Table 1/`** reproduces the Walmart empirical application figures and Table 1.
+## Folder 1: `Single Simulation (generates Figures 4, 5, OA5, OA6, OA7, OA8)/`
 
-## Folder 1: `Figure 4-5, Figure OA5-OA8/`
-
-This folder contains code for generating the simulation figures in Section 5 and Section OA7.
+This folder contains code for generating the simulation figures: Figures 4, 5, OA5, OA6, OA7, OA8.
 
 ### `SCdesign_LazyRun.R`
 
-- **Purpose:** Generates one simulation environment as described in Section 5.
+- **Purpose:** Generates one simulation environment as described in Section 5.1.
 - **How to run:** In Line 131, specify one of the following values:
   - `noise.variance = 1`
   - `noise.variance = 5`
   - `noise.variance = 10`
 - **Connection to paper:**
-  - `noise.variance = 1` reproduces Figures 4–5 in Section 5.1.
-  - `noise.variance = 5` and `noise.variance = 10` reproduce Figures OA5–OA8 in Section OA7.
+  - `noise.variance = 1` reproduces Figures 4 and 5.
+  - `noise.variance = 5` reproduces Figures OA5 and OA6.
+  - `noise.variance = 5` reproduces Figures OA7 and OA8.
 - **Running time:** Less than 1.5 hours for each value of `noise.variance`.
 - **Output files:**
   - `ObservedData_NoiseVariance=1.png` → Figure 4
@@ -68,7 +65,7 @@ This folder contains code for generating the simulation figures in Section 5 and
   - `ObservedData_NoiseVariance=10.png` → Figure OA7
   - `Residuals_NoiseVariance=10.png` → Figure OA8
 
-## Folder 2: `Table 2-5, Table OA1-2/`
+## Folder 2: `Many Simulations (generates Tables 2, 3, OA1, OA2, OA3, OA4, OA5, OA6, OA7, OA8)/`
 
 This folder contains code for the simulation studies used to generate Tables 2–5 and Tables OA1–OA2.
 
