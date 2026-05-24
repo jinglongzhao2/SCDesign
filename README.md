@@ -54,10 +54,10 @@ This folder contains code for generating the simulation figures: Figures 4, 5, O
 ### `SCdesign_LazyRun.R`
 
 - **Purpose:** Generates one simulation environment as described in Section 5.1.
-- **How to run:** In Line 131, specify one of the following values:
-  - `noise.variance = 1`
-  - `noise.variance = 5`
-  - `noise.variance = 10`
+- **How to run:** In Line 7, specify one of the following values:
+  - `input.variance = 1`
+  - `input.variance = 5`
+  - `input.variance = 10`
 - **Connection to paper:**
   - `noise.variance = 1` reproduces Figures 4 and 5.
   - `noise.variance = 5` reproduces Figures OA5 and OA6.
