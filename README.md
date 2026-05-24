@@ -2,10 +2,10 @@ Synthetic Control Design
 
 This is a list of all provided materials' names and usages. All the running times are reported using a personal laptop with the following specifications:
 
-Operating System: Windows 11 Enterprise version 23H2
-Processor: Intel(R) Core(TM) Ultra 5 135H   3.60 GHz
-RAM: 16.0 GB (15.6 GB usable)
-System type: 64-bit operating system, x64-based processor 
+    Operating System: Windows 11 Enterprise version 23H2
+    Processor: Intel(R) Core(TM) Ultra 5 135H   3.60 GHz
+    RAM: 16.0 GB (15.6 GB usable)
+    System type: 64-bit operating system, x64-based processor 
 
 Some simulation files were designed to be run on an online computing cluster with 1000 random seeds. For a local test run, the random seed can be fixed manually as described below.
 
