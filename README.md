@@ -1,6 +1,6 @@
 # Synthetic Control Design
 
-This is a list of all provided materials' names and usages. All the running times are reported using a personal laptop with the following specifications:
+This README file describes the files included in the replication package and explains how to use them to reproduce the tables and figures in the paper. All running times are reported using a personal laptop with the following specifications:
 
     Operating System: Windows 11 Enterprise version 23H2
     Processor: Intel(R) Core(TM) Ultra 5 135H   3.60 GHz
@@ -45,7 +45,7 @@ SyntheticControlDesign/
         output/
 ```
 
-The three main folders generates different tables and figures of the paper.
+The four main folders generates different tables and figures of the paper.
 
 ## Folder 1: `Single Simulation (generates Figures 4, 5, OA5, OA6, OA7, OA8)/`
 
@@ -58,7 +58,7 @@ This folder contains code for generating the simulation figures: Figures 4, 5, O
   - `input.variance = 1`, reproduces Figures 4 and 5.
   - `input.variance = 5`, reproduces Figures OA5 and OA6.
   - `input.variance = 10`, reproduces Figures OA7 and OA8.
-- **Running time:** Less than 1.5 hours for each value of `noise.variance`.
+- **Running time:** Less than 1.5 hours for each value of `input.variance`.
 - **Output files:**
   - `ObservedData_NoiseVariance=1.png` → Figure 4
   - `Residuals_NoiseVariance=1.png` → Figure 5
@@ -103,7 +103,7 @@ This folder contains code for the simulation studies used to generate Tables 2, 
 - **Input folder:** `output/`
 - **Expected input:** After 1000 runs, the `output/` folder should contain 11000 intermediate files.
 - **Running time:** Less than 1 minute.
-- **Output files:** If today is "DATE", the script produces:
+- **Output files:** If the script is run on `DATE`, it produces:
   - `"DATE"Average_Different_Optimization_Methods_ATE_ConsUncons.txt` → Table 2
   - `"DATE"Compare_With_Randomization.txt` → Table 3
   - `"DATE"Average_Different_Optimization_Methods_ATE_Others.txt` → Table OA1
@@ -142,7 +142,7 @@ This folder contains code for the simulation studies used to generate Tables 2, 
 - **Input folder:** `output_nonlinear/`
 - **Expected input:** After 1000 runs, the `output_nonlinear/` folder should contain 11000 intermediate files.
 - **Running time:** Less than 1 minute.
-- **Output files:** If today is "DATE", the script produces:
+- **Output files:** If the script is run on `DATE`, it produces:
   - `"DATE"Nonlinear_Average_Different_Optimization_Methods_ATE.txt` → Table OA4
   - `"DATE"Nonlinear_Average_Different_Optimization_Methods_ATET.txt` → Table OA5
   - `"DATE"Nonlinear_Compare_With_Randomization.txt` → Table OA6
@@ -195,7 +195,7 @@ This folder contains the Walmart empirical application and the corresponding ran
   - `123456RandomAssignment_RADiM.txt`
   - `123456RandomAssignment_RARegAdj.txt`
       - Note: regression adjustment is the same as difference-in-means estimation because there are no observed covariates
-  - `123456StratifiedAssignment_StADiM.txt.txt`
+  - `123456StratifiedAssignment_StADiM.txt`
 
 ### `Analyzing_Outputs_Walmart.R`
 
@@ -203,7 +203,7 @@ This folder contains the Walmart empirical application and the corresponding ran
 - **Input folder:** `output_Randomization/`
 - **Expected input:** After 1000 runs, the `output_Randomization/` folder should contain 5000 intermediate files.
 - **Running time:** Less than 1 minute.
-- **Output file:**
+- **Output file:** If the script is run on `DATE`, it produces:
   - `"DATE"Summary_compare_with_randomization.txt` → Table 1
 
 
@@ -243,7 +243,7 @@ This folder contains code for the additional simulation studies used to generate
 - **Input folder:** `output/`
 - **Expected input:** After 1000 runs, the `output/` folder should contain 11000 intermediate files.
 - **Running time:** Less than 1 minute.
-- **Output files:** If today is "DATE", the script produces:
+- **Output files:** If the script is run on `DATE`, it produces:
   - `"DATE"Average_Different_Optimization_Methods_ATE.txt` → Table OA7
   - `"DATE"Average_Different_Optimization_Methods_ATET.txt` → Table OA8
 
@@ -263,7 +263,7 @@ To reproduce the results, run the scripts in the following order.
 2. Run `Main_LazyRun.R` for random seeds 1 through 1000.
 3. Run `Analyzing_Outputs.R`.
 4. Run `Main_Nonlinear_LazyRun.R` for random seeds 1 through 1000.
-5. Run `Analyzing_Outputs_Nonlinear2.R`.
+5. Run `Analyzing_Outputs_Nonlinear.R`.
 
 ### C. Walmart application
 
@@ -282,5 +282,4 @@ To reproduce the results, run the scripts in the following order.
 
 Some output file names begin with `"DATE"`. This indicates that the actual file name includes the date on which the script was run.
 
-Some scripts generate additional sanity-check output files that are not directly reported in the paper. These files are retained to help verify the computations, or have been used to generate tables that have appeared in previous versions of this paper.
-
+Some scripts generate additional sanity-check output files that are not directly reported in the paper. These files are retained to help verify the computations or were used to generate tables that appeared in previous versions of the paper.
