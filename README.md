@@ -17,20 +17,17 @@ The replication package is organized as follows:
 SyntheticControlDesign/
     README.md
 
-    Figure 4-5, Figure OA5-OA8/
+    Single Simulation (generates Figures 4, 5, OA5, OA6, OA7, OA8)/
         SCdesign_LazyRun.R
 
-    Table 2-5, Table OA1-2/
-        Different_optimization_methods.R
+    Many Simulations (generates Tables 2, 3, OA1, OA2, OA3, OA4, OA5, OA6, OA7, OA8)/
+        Main_LazyRun.R
         Analyzing_Outputs.R
-        Nonlinear2.R
-        Analyzing_Outputs_Nonlinear2.R
-        RandomAssignment.R
-        Analyzing_Outputs_RandomAssignment.R
+        Main_Nonlinear_LazyRun.R
+        Analyzing_Outputs_Nonlinear.R
 
-        output11/
-        output11_nonlinear/
-        output11_Randomization/
+        output/
+        output_nonlinear/
 
     Figure 2-3, OA1-4, Table 1/
         Walmart.csv
