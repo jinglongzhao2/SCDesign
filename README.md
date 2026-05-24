@@ -55,13 +55,9 @@ This folder contains code for generating the simulation figures: Figures 4, 5, O
 
 - **Purpose:** Generates one simulation environment as described in Section 5.1.
 - **How to run:** In Line 7, specify one of the following values:
-  - `input.variance = 1`
-  - `input.variance = 5`
-  - `input.variance = 10`
-- **Connection to paper:**
-  - `noise.variance = 1` reproduces Figures 4 and 5.
-  - `noise.variance = 5` reproduces Figures OA5 and OA6.
-  - `noise.variance = 5` reproduces Figures OA7 and OA8.
+  - `input.variance = 1`, reproduces Figures 4 and 5.
+  - `input.variance = 5`, reproduces Figures OA5 and OA6.
+  - `input.variance = 10`, reproduces Figures OA7 and OA8.
 - **Running time:** Less than 1.5 hours for each value of `noise.variance`.
 - **Output files:**
   - `ObservedData_NoiseVariance=1.png` → Figure 4
