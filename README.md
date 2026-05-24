@@ -29,11 +29,11 @@ SyntheticControlDesign/
         output/
         output_nonlinear/
 
-    Figure 2-3, OA1-4, Table 1/
+    Walmart Data Simulations (generates Table 1, Figures 2, 3, OA1, OA2, OA3, OA4)/
         Walmart.csv
         Walmart_LazyRun.R
         Walmart_Randomization.R
-        Analyzing_Outputs_RandomAssignment.R
+        Analyzing_Outputs_Walmart.R
 
         output/
         output_Randomization/
