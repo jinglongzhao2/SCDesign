@@ -69,26 +69,31 @@ This folder contains code for generating the simulation figures: Figures 4, 5, O
 
 This folder contains code for the simulation studies used to generate Tables 2–5 and Tables OA1–OA2.
 
-### `Different_optimization_methods.R`
+### `Main_LazyRun.R`
 
-- **Purpose:** Generates one simulation environment as described in Section 5.
-- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 29 by
+- **Purpose:** There are two tasks. Task 1: compare different formulations of synthetic control designs across many simulations. Task 2: compare the synthetic control design (implemented using the constrained formulation) with randomization methods. 
+- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 37 by
   ```r
   repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
   ```
-- **Local test run:** To run a local test, comment out Line 29 and instead set
+- **Local test run:** To run a local test, comment out Line 37 and instead set the following as in Line 36
   ```r
-  repetition.RANDOM.SEED = 1
+  repetition.RANDOM.SEED = 123456
   ```
-- **Running time:** Less than 12 hours for each seed.
-- **Intermediate output folder:** `output11/`
-- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
-  - `1Different_Optimization_Methods_ATE.txt`
-  - `1Different_Optimization_Methods_ATE_null_hypothesis.txt`
-  - `1Different_Optimization_Methods_ATEC.txt` — sanity check only
-  - `1Different_Optimization_Methods_ATET.txt`
-  - `1Different_Optimization_Methods_ControlWeights.txt` — sanity check only
-  - `1Different_Optimization_Methods_TreatmentWeights.txt` — sanity check only
+- **Running time:** Less than 24 hours for each seed.
+- **Intermediate output folder:** `output/`
+- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 123456`, the script produces:
+  - `123456Different_Optimization_Methods_ATE.txt` — used in Task 1
+  - `123456Different_Optimization_Methods_ATE_null_hypothesis.txt` — used in Task 1
+  - `123456Different_Optimization_Methods_ATEC.txt` — sanity check only
+  - `123456Different_Optimization_Methods_ATET.txt` — used in Task 1
+  - `123456Different_Optimization_Methods_ControlWeights.txt` — sanity check only
+  - `123456Different_Optimization_Methods_TreatmentWeights.txt` — sanity check only
+  - `123456RandomAssignment_RA1NN.txt` — used in Task 2
+  - `123456RandomAssignment_RA5NN.txt` — used in Task 2
+  - `123456RandomAssignment_RADiM.txt` — used in Task 2
+  - `123456RandomAssignment_RARegAdj.txt` — used in Task 2
+  - `123456StratifiedAssignment_StADiM.txt` — used in Task 2
 
 ### `Analyzing_Outputs.R`
 
@@ -144,26 +149,6 @@ This folder contains code for the simulation studies used to generate Tables 2�
   - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATE_null_hypothesis.txt` — sanity check only
   - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATEC.txt` — sanity check only
   - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATET.txt` → Table OA2
-
-### `RandomAssignment.R`
-
-- **Purpose:** Generates one simulation environment as described in Section 5.2.4.
-- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 35 by
-  ```r
-  repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
-  ```
-- **Local test run:** To run a local test, comment out Line 35 and instead set
-  ```r
-  repetition.RANDOM.SEED = 1
-  ```
-- **Running time:** Less than 2 hours for each seed.
-- **Intermediate output folder:** `output11_Randomization/`
-- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
-  - `1RandomAssignment_RA1NN.txt`
-  - `1RandomAssignment_RA5NN.txt`
-  - `1RandomAssignment_RADiM.txt`
-  - `1RandomAssignment_RARegAdj.txt`
-  - `1RandomAssignment_StADiM.txt`
 
 ### `Analyzing_Outputs_RandomAssignment.R`
 
