@@ -1,150 +1,273 @@
-# Synthetic Control Design
+# Synthetic Control Design: Replication Package
 
-This is a list of all provided materials' names and usages. All the running times are reported using a personal laptop with the following specifications:
+This README describes the contents of the replication package for the paper on synthetic control design. The package contains R scripts and data files used to reproduce the figures and tables reported in the paper and its online appendix.
 
-	Operating System: Windows 11 Enterprise version 23H2
-	Processor: Intel(R) Core(TM) Ultra 5 135H   3.60 GHz
-	RAM: 16.0 GB (15.6 GB usable)
-	System type: 64-bit operating system, x64-based processor 
+Running times below are based on a personal laptop with the following specifications:
 
+- **Operating system:** Windows 11 Enterprise version 23H2
+- **Processor:** Intel(R) Core(TM) Ultra 5 135H, 3.60 GHz
+- **RAM:** 16.0 GB, 15.6 GB usable
+- **System type:** 64-bit operating system, x64-based processor
 
-There are three folders, each containing files to generate a part of the Figures or Tables in the paper.
+Some simulation files were designed to be run on an online computing cluster with 1000 random seeds. For a local test run, the random seed can be fixed manually as described below.
 
-## Folder names, file names, usages, and running times:
+## Structure of the Replication Package
 
-### 1. Folder: Figure 4-5, Figure OA5-OA8
+The replication package is organized as follows:
 
-#### 1.1. File: SCdesign_LazyRun.R
+```text
+SyntheticControlDesign/
+    README.md
+
+    Figure 4-5, Figure OA5-OA8/
+        SCdesign_LazyRun.R
+
+    Table 2-5, Table OA1-2/
+        Different_optimization_methods.R
+        Analyzing_Outputs.R
+        Nonlinear2.R
+        Analyzing_Outputs_Nonlinear2.R
+        RandomAssignment.R
+        Analyzing_Outputs_RandomAssignment.R
+
+        output11/
+        output11_nonlinear/
+        output11_Randomization/
+
+    Figure 2-3, OA1-4, Table 1/
+        Walmart.csv
+        Walmart_LazyRun.R
+        Walmart_Randomization.R
+        Analyzing_Outputs_RandomAssignment.R
+
+        output/
+        output_Randomization/
+```
+
+The three main folders correspond to different parts of the paper:
+
+1. **`Figure 4-5, Figure OA5-OA8/`** reproduces the simulation figures in Section 5 and Section OA7.
+2. **`Table 2-5, Table OA1-2/`** reproduces the main simulation tables and related online appendix tables.
+3. **`Figure 2-3, OA1-4, Table 1/`** reproduces the Walmart empirical application figures and Table 1.
+
+## Folder 1: `Figure 4-5, Figure OA5-OA8/`
+
+This folder contains code for generating the simulation figures in Section 5 and Section OA7.
+
+### `SCdesign_LazyRun.R`
+
 - **Purpose:** Generates one simulation environment as described in Section 5.
-- **Note:** In generating the simulation environment, need to specify `noise.variance = 1`, `noise.variance = 5`, or `noise.variance = 10` in Line 131.
-  - `noise.variance = 1`: Figures 4–5 in Section 5.1
-  - `noise.variance = 5` and `10`: Figures OA5–OA8 in Section OA7
-- **Running time:** for each parameter of `noise.variance = 1`, `noise.variance = 5`, or `noise.variance = 10`, running time is less than 1.5 hours.
-- **Output files:** 
-  - `ObservedData_NoiseVariance=1.png` → Figure 4  
-  - `Residuals_NoiseVariance=1.png` → Figure 5  
-  - `ObservedData_NoiseVariance=5.png` → Figure OA5  
-  - `Residuals_NoiseVariance=5.png` → Figure OA6  
-  - `ObservedData_NoiseVariance=10.png` → Figure OA7  
-  - `Residuals_NoiseVariance=10.png` → Figure OA8  
+- **How to run:** In Line 131, specify one of the following values:
+  - `noise.variance = 1`
+  - `noise.variance = 5`
+  - `noise.variance = 10`
+- **Connection to paper:**
+  - `noise.variance = 1` reproduces Figures 4–5 in Section 5.1.
+  - `noise.variance = 5` and `noise.variance = 10` reproduce Figures OA5–OA8 in Section OA7.
+- **Running time:** Less than 1.5 hours for each value of `noise.variance`.
+- **Output files:**
+  - `ObservedData_NoiseVariance=1.png` → Figure 4
+  - `Residuals_NoiseVariance=1.png` → Figure 5
+  - `ObservedData_NoiseVariance=5.png` → Figure OA5
+  - `Residuals_NoiseVariance=5.png` → Figure OA6
+  - `ObservedData_NoiseVariance=10.png` → Figure OA7
+  - `Residuals_NoiseVariance=10.png` → Figure OA8
 
+## Folder 2: `Table 2-5, Table OA1-2/`
 
----
+This folder contains code for the simulation studies used to generate Tables 2–5 and Tables OA1–OA2.
 
+### `Different_optimization_methods.R`
 
-### 2. Folder: Table 2-5, Table OA1-2
-
-#### 2.1. File: Different_optimization_methods.R
 - **Purpose:** Generates one simulation environment as described in Section 5.
-- **Note:**
-  - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` 
-  - For a test run, set a fixed random seed by commenting out Line 29 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
-- **Running time:** for each parameter (e.g., `repetition.RANDOM.SEED = 1`), running time is less than 12 hours.
-- **Intermediate output files:** for each random seed (e.g., `repetition.RANDOM.SEED = 1`), produces 6 intermediate files into the `output11` folder.
+- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 29 by
+  ```r
+  repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
+  ```
+- **Local test run:** To run a local test, comment out Line 29 and instead set
+  ```r
+  repetition.RANDOM.SEED = 1
+  ```
+- **Running time:** Less than 12 hours for each seed.
+- **Intermediate output folder:** `output11/`
+- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
   - `1Different_Optimization_Methods_ATE.txt`
   - `1Different_Optimization_Methods_ATE_null_hypothesis.txt`
-  - `1Different_Optimization_Methods_ATEC.txt` (for sanity check only)
+  - `1Different_Optimization_Methods_ATEC.txt` — sanity check only
   - `1Different_Optimization_Methods_ATET.txt`
-  - `1Different_Optimization_Methods_ControlWeights.txt` (for sanity check only)
-  - `1Different_Optimization_Methods_TreatmentWeights.txt` (for sanity check only)
+  - `1Different_Optimization_Methods_ControlWeights.txt` — sanity check only
+  - `1Different_Optimization_Methods_TreatmentWeights.txt` — sanity check only
 
-#### 2.2. File: Analyzing_Outputs.R
-- **Purpose:** After running Different_optimization_methods.R 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 6000 files in the `output11` folder. Run this code to combine all the intermediate files.
-- **Note:** The output files contain more rows than in the paper. We only present five parameters `beta = 0.01, 0.1, 1, 10, 100`, five parameters `xi = 0.01, 0.1, 1, 10, 100`, and five parameters `lambda = 0.01, 0.1, 1, 10, 100` in the paper. But the output files contain eight parameters `beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, eight parameters `xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, and eight parameters `lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`
-- **Running time:** less than 1 minute.
-- **Output files:** 
+### `Analyzing_Outputs.R`
+
+- **Purpose:** Combines the intermediate files generated by running `Different_optimization_methods.R` with 1000 random seeds.
+- **Input folder:** `output11/`
+- **Expected input:** After 1000 runs, the `output11/` folder should contain 6000 intermediate files.
+- **Note:** The output files contain more parameter values than those reported in the paper. The paper reports five values each for `beta`, `xi`, and `lambda`:
+  - `0.01, 0.1, 1, 10, 100`
+
+  The output files contain eight values each:
+  - `0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`
+- **Running time:** Less than 1 minute.
+- **Output files:**
   - `"DATE"Average_Different_Optimization_Methods_ATE.txt` → Table 2
   - `"DATE"Average_Different_Optimization_Methods_ATE_null_hypothesis.txt` → Table 4
-  - `"DATE"Average_Different_Optimization_Methods_ATEC.txt` (for sanity check only)
+  - `"DATE"Average_Different_Optimization_Methods_ATEC.txt` — sanity check only
   - `"DATE"Average_Different_Optimization_Methods_ATET.txt` → Table OA1
 
-#### 2.3. File: Nonlinear2.R
-- **Purpose:** Generates one simulation environment as described in Section 5.2.2.
-- **Note:**
-  - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 21 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))`
-  - For a test run, set a fixed random seed by commenting out Line 21 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
-- **Running time:** for each parameter (e.g., `repetition.RANDOM.SEED = 1`), running time is less than 18 hours.
-- **Intermediate output files:** for each random seed (e.g., `repetition.RANDOM.SEED = 1`), produces 6 intermediate files into the `output11_nonlinear` folder.
-  - `1Different_Optimization_Methods_ATE.txt`
-  - `1Different_Optimization_Methods_ATE_null_hypothesis.txt` (for sanity check only)
-  - `1Different_Optimization_Methods_ATEC.txt` (for sanity check only)
-  - `1Different_Optimization_Methods_ATET.txt`
-  - `1Different_Optimization_Methods_ControlWeights.txt` (for sanity check only)
-  - `1Different_Optimization_Methods_TreatmentWeights.txt` (for sanity check only)
+### `Nonlinear2.R`
 
-#### 2.4. File: Analyzing_Outputs_Nonlinear2.R
-- **Purpose:** After running Nonlinear2.R 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 6000 files in the `output11_nonlinear` folder. Run this code to combine all the intermediate files.
-- **Note:** The output files contain more rows than in the paper. We only present five parameters `beta = 0.01, 0.1, 1, 10, 100`, five parameters `xi = 0.01, 0.1, 1, 10, 100`, and five parameters `lambda = 0.01, 0.1, 1, 10, 100` in the paper. But the output files contain eight parameters `beta = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, eight parameters `xi = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`, and eight parameters `lambda = 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`
-- **Running time:** less than 1 minute.
-- **Output files:** 
+- **Purpose:** Generates one simulation environment as described in Section 5.2.2.
+- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 21 by
+  ```r
+  repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
+  ```
+- **Local test run:** To run a local test, comment out Line 21 and instead set
+  ```r
+  repetition.RANDOM.SEED = 1
+  ```
+- **Running time:** Less than 18 hours for each seed.
+- **Intermediate output folder:** `output11_nonlinear/`
+- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
+  - `1Different_Optimization_Methods_ATE.txt`
+  - `1Different_Optimization_Methods_ATE_null_hypothesis.txt` — sanity check only
+  - `1Different_Optimization_Methods_ATEC.txt` — sanity check only
+  - `1Different_Optimization_Methods_ATET.txt`
+  - `1Different_Optimization_Methods_ControlWeights.txt` — sanity check only
+  - `1Different_Optimization_Methods_TreatmentWeights.txt` — sanity check only
+
+### `Analyzing_Outputs_Nonlinear2.R`
+
+- **Purpose:** Combines the intermediate files generated by running `Nonlinear2.R` with 1000 random seeds.
+- **Input folder:** `output11_nonlinear/`
+- **Expected input:** After 1000 runs, the `output11_nonlinear/` folder should contain 6000 intermediate files.
+- **Note:** The output files contain more parameter values than those reported in the paper. The paper reports five values each for `beta`, `xi`, and `lambda`:
+  - `0.01, 0.1, 1, 10, 100`
+
+  The output files contain eight values each:
+  - `0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000`
+- **Running time:** Less than 1 minute.
+- **Output files:**
   - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATE.txt` → Table 3
-  - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATE_null_hypothesis.txt` (for sanity check only)
-  - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATEC.txt` (for sanity check only)
+  - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATE_null_hypothesis.txt` — sanity check only
+  - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATEC.txt` — sanity check only
   - `"DATE"Nonlinear2_Average_Different_Optimization_Methods_ATET.txt` → Table OA2
 
-#### 2.5. File: RandomAssignment.R 
+### `RandomAssignment.R`
+
 - **Purpose:** Generates one simulation environment as described in Section 5.2.4.
-- **Note:**
-  - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 35 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` 
-  - For a test run, set a fixed random seed by commenting out Line 35 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
-- **Running time:** for each parameter (e.g., `repetition.RANDOM.SEED = 1`), running time is less than 2 hours.
-- **Intermediate output files:** for each random seed (e.g., `repetition.RANDOM.SEED = 1`), produces 5 intermediate files into the `output11_Randomization` folder.
+- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 35 by
+  ```r
+  repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
+  ```
+- **Local test run:** To run a local test, comment out Line 35 and instead set
+  ```r
+  repetition.RANDOM.SEED = 1
+  ```
+- **Running time:** Less than 2 hours for each seed.
+- **Intermediate output folder:** `output11_Randomization/`
+- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
   - `1RandomAssignment_RA1NN.txt`
   - `1RandomAssignment_RA5NN.txt`
   - `1RandomAssignment_RADiM.txt`
   - `1RandomAssignment_RARegAdj.txt`
   - `1RandomAssignment_StADiM.txt`
 
-#### 2.6. File: Analyzing_Outputs_RandomAssignment.R 
-- **Purpose:** After running `RandomAssignment.R` 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 5000 files in the `output11_Randomization` folder. Run this code to combine all the intermediate files.
-- **Running time:** less than 1 minute.
-- **Output file:** 
+### `Analyzing_Outputs_RandomAssignment.R`
+
+- **Purpose:** Combines the intermediate files generated by running `RandomAssignment.R` with 1000 random seeds.
+- **Input folder:** `output11_Randomization/`
+- **Expected input:** After 1000 runs, the `output11_Randomization/` folder should contain 5000 intermediate files.
+- **Running time:** Less than 1 minute.
+- **Output file:**
   - `"DATE"Summary_compare_with_randomization.txt` → Table 5
 
+## Folder 3: `Figure 2-3, OA1-4, Table 1/`
 
----
+This folder contains the Walmart empirical application and the corresponding randomization comparison.
 
+### `Walmart.csv`
 
-### 3. Folder: Figure 2-3, OA1-4, Table 1
+- **Purpose:** Data file from Kaggle.
 
-#### 3.1. File: Walmart.csv
-- **Purpose:** Data file from Kaggle
+### `Walmart_LazyRun.R`
 
-#### 3.2. File: Walmart_LazyRun.R
-- **Purpose:**
-  - Reads Walmart.csv data and conducts synthetic control design as described in Section 4 of our paper.
-  - Produces 2 figures of the constrained formulation for each parameter of `m-bar = 1, 2, 3, 4, 5`, into the `output` folder. How these figures are selected are described in Section 4 of our paper.
-- **Running time:** for all 5 parameters, totaling less than 6 hours.
-- **Intermediate output file:** Produces an intermediate output that will be used in Table 1.
-  - `"DATE"SC_cardinality_matrix.txt` → reports RMSE of synthetic control design
+- **Purpose:** Reads `Walmart.csv` and conducts the synthetic control design described in Section 4 of the paper.
+- **How to run:** The script produces figures for each value of `m-bar = 1, 2, 3, 4, 5`.
+- **Running time:** Less than 6 hours in total for all five values of `m-bar`.
+- **Intermediate output file:**
+  - `"DATE"SC_cardinality_matrix.txt` → reports the RMSE of the synthetic control design and is used to construct Table 1.
+- **Output folder:** `output/`
 - **Output files:**
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=1_"DATE".png` → Figure OA1
   - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=1_"DATE".png` → Figure OA2
-  - `Fitted_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 1
-  - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 2
+  - `Fitted_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 2
+  - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 3
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=3_"DATE".png` → Figure OA3
   - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=3_"DATE".png` → Figure OA4
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=4_"DATE".png`
   - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=4_"DATE".png`
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=5_"DATE".png`
-  - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=6_"DATE".png`
+  - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=5_"DATE".png`
 
-#### 3.3. File: Walmart_Randomization.R
-- **Purpose:** Generates one simulation as described in Section 4 of our paper.
-- **Note:**
-  - This file is run through online cluster computing, which sends 1000 files each with a different seed to the server using Line 14 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` 
-  - For a test run, set a fixed random seed by commenting out Line 14 `repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))` and setting `repetition.RANDOM.SEED = 1`
-- **Running time:** for each parameter (e.g., `repetition.RANDOM.SEED = 1`), running time is less than 2 hours.
-- **Intermediate output files:** for each random seed (e.g., `repetition.RANDOM.SEED = 1`), produces 5 intermediate files into the `output_Randomization` folder.
+### `Walmart_Randomization.R`
+
+- **Purpose:** Generates one randomization simulation as described in Section 4 of the paper.
+- **Cluster run:** This file is designed to be run on an online computing cluster with 1000 random seeds. The random seed is set in Line 14 by
+  ```r
+  repetition.RANDOM.SEED = as.numeric(Sys.getenv("SGE_TASK_ID"))
+  ```
+- **Local test run:** To run a local test, comment out Line 14 and instead set
+  ```r
+  repetition.RANDOM.SEED = 1
+  ```
+- **Running time:** Less than 2 hours for each seed.
+- **Intermediate output folder:** `output_Randomization/`
+- **Intermediate output files:** For each random seed, for example `repetition.RANDOM.SEED = 1`, the script produces:
   - `1RandomAssignment_RA1NN.txt`
   - `1RandomAssignment_RA5NN.txt`
   - `1RandomAssignment_RADiM.txt`
-  - `1RandomAssignment_RARegAdj.txt`: Regression adjustment is the same as difference in means estimation because there is no observed covariates.
+  - `1RandomAssignment_RARegAdj.txt` — regression adjustment is the same as difference-in-means estimation because there are no observed covariates
   - `1RandomAssignment_StADiM.txt`
 
-#### 3.4. File: Analyzing_Outputs_RandomAssignment.R 
-- **Purpose:** After running Walmart_Randomization.R 1000 times using 1000 random seeds `repetition.RANDOM.SEED = 1` ~ `repetition.RANDOM.SEED = 1000`, there are 5000 files in the `output_Randomization` folder. Run this code to combine all the intermediate files.
-- **Note:** Run this code to also combine the intermediate file that `Walmart_LazyRun.R` generated for synthetic control design.
-- **Running time:** less than 1 minute.
+### `Analyzing_Outputs_RandomAssignment.R`
+
+- **Purpose:** Combines the intermediate files generated by running `Walmart_Randomization.R` with 1000 random seeds. It also combines the intermediate file generated by `Walmart_LazyRun.R` for the synthetic control design.
+- **Input folder:** `output_Randomization/`
+- **Expected input:** After 1000 runs, the `output_Randomization/` folder should contain 5000 intermediate files.
+- **Running time:** Less than 1 minute.
 - **Output file:**
   - `"DATE"Summary_compare_with_randomization.txt` → Table 1
+
+## Suggested Order for Replication
+
+To reproduce the results, run the scripts in the following order.
+
+### A. Simulation figures
+
+1. Go to `Figure 4-5, Figure OA5-OA8/`.
+2. Run `SCdesign_LazyRun.R` three times, setting `noise.variance` equal to `1`, `5`, and `10`.
+
+### B. Main simulation tables
+
+1. Go to `Table 2-5, Table OA1-2/`.
+2. Run `Different_optimization_methods.R` for random seeds 1 through 1000.
+3. Run `Analyzing_Outputs.R`.
+4. Run `Nonlinear2.R` for random seeds 1 through 1000.
+5. Run `Analyzing_Outputs_Nonlinear2.R`.
+6. Run `RandomAssignment.R` for random seeds 1 through 1000.
+7. Run `Analyzing_Outputs_RandomAssignment.R`.
+
+### C. Walmart application
+
+1. Go to `Figure 2-3, OA1-4, Table 1/`.
+2. Run `Walmart_LazyRun.R`.
+3. Run `Walmart_Randomization.R` for random seeds 1 through 1000.
+4. Run `Analyzing_Outputs_RandomAssignment.R`.
+
+## Notes on Output Files
+
+Some output file names begin with `"DATE"`. This indicates that the actual file name includes the date on which the script was run.
+
+Some scripts generate additional sanity-check output files that are not directly reported in the paper. These files are retained to help verify the computations.
+
