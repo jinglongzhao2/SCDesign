@@ -768,6 +768,27 @@ q.hat.Cardinality.vector = c()
 
 for(K.temp in changing.K)
 {
+  tentative.T.weights = round(my.results.Cardinality.changing.K[[K.temp]]$Treatment.weights, digits = Weight.digits)
+  tentative.C.weights = round(my.results.Cardinality.changing.K[[K.temp]]$Control.weights, digits = Weight.digits)
+  
+  use.T.weights = tentative.T.weights
+  use.C.weights = tentative.C.weights
+  
+  T.weights.Cardinality.matrix = rbind(T.weights.Cardinality.matrix, use.T.weights)
+  C.weights.Cardinality.matrix = rbind(C.weights.Cardinality.matrix, use.C.weights)
+  
+  T.I.after.Cardinality.matrix = rbind(T.I.after.Cardinality.matrix, t(use.T.weights) %*% Y.I.matrix[,(T.naught+1):T.total])
+  C.N.after.Cardinality.matrix = rbind(C.N.after.Cardinality.matrix, t(use.C.weights) %*% Y.N.matrix[,(T.naught+1):T.total])
+  T.N.after.Cardinality.matrix = rbind(T.N.after.Cardinality.matrix, t(use.T.weights) %*% Y.N.matrix[,(T.naught+1):T.total])
+  C.I.after.Cardinality.matrix = rbind(C.I.after.Cardinality.matrix, t(use.C.weights) %*% Y.I.matrix[,(T.naught+1):T.total])
+  
+  estimated.ATE.Cardinality.matrix = rbind(estimated.ATE.Cardinality.matrix, T.I.after.Cardinality.matrix[K.temp,] - C.N.after.Cardinality.matrix[K.temp,])
+  
+  T.fitted.N.before.Cardinality.matrix = rbind(T.fitted.N.before.Cardinality.matrix, t(use.T.weights) %*% Y.N.matrix[,1:T.naught])
+  C.fitted.N.before.Cardinality.matrix = rbind(C.fitted.N.before.Cardinality.matrix, t(use.C.weights) %*% Y.N.matrix[,1:T.naught])
+  blank.period.residuals.Cardinality.matrix = rbind(blank.period.residuals.Cardinality.matrix, T.fitted.N.before.Cardinality.matrix[K.temp, (T.prime+1):T.naught] - C.fitted.N.before.Cardinality.matrix[K.temp, (T.prime+1):T.naught])
+  residuals.Cardinality.matrix = rbind(residuals.Cardinality.matrix, c(T.fitted.N.before.Cardinality.matrix[K.temp,] - C.fitted.N.before.Cardinality.matrix[K.temp,], estimated.ATE.Cardinality.matrix[K.temp,]))
+  
   if(K.temp == 1)
   {
     #================================#
@@ -830,27 +851,6 @@ for(K.temp in changing.K)
     legend("topleft", legend = c("treatment effect estimate"), col = c(1), lty = c(1), lwd = 4, cex = 2)
     dev.off()
   }
-  
-  tentative.T.weights = round(my.results.Cardinality.changing.K[[K.temp]]$Treatment.weights, digits = Weight.digits)
-  tentative.C.weights = round(my.results.Cardinality.changing.K[[K.temp]]$Control.weights, digits = Weight.digits)
-  
-  use.T.weights = tentative.T.weights
-  use.C.weights = tentative.C.weights
-  
-  T.weights.Cardinality.matrix = rbind(T.weights.Cardinality.matrix, use.T.weights)
-  C.weights.Cardinality.matrix = rbind(C.weights.Cardinality.matrix, use.C.weights)
-  
-  T.I.after.Cardinality.matrix = rbind(T.I.after.Cardinality.matrix, t(use.T.weights) %*% Y.I.matrix[,(T.naught+1):T.total])
-  C.N.after.Cardinality.matrix = rbind(C.N.after.Cardinality.matrix, t(use.C.weights) %*% Y.N.matrix[,(T.naught+1):T.total])
-  T.N.after.Cardinality.matrix = rbind(T.N.after.Cardinality.matrix, t(use.T.weights) %*% Y.N.matrix[,(T.naught+1):T.total])
-  C.I.after.Cardinality.matrix = rbind(C.I.after.Cardinality.matrix, t(use.C.weights) %*% Y.I.matrix[,(T.naught+1):T.total])
-  
-  estimated.ATE.Cardinality.matrix = rbind(estimated.ATE.Cardinality.matrix, T.I.after.Cardinality.matrix[K.temp,] - C.N.after.Cardinality.matrix[K.temp,])
-  
-  T.fitted.N.before.Cardinality.matrix = rbind(T.fitted.N.before.Cardinality.matrix, t(use.T.weights) %*% Y.N.matrix[,1:T.naught])
-  C.fitted.N.before.Cardinality.matrix = rbind(C.fitted.N.before.Cardinality.matrix, t(use.C.weights) %*% Y.N.matrix[,1:T.naught])
-  blank.period.residuals.Cardinality.matrix = rbind(blank.period.residuals.Cardinality.matrix, T.fitted.N.before.Cardinality.matrix[K.temp, (T.prime+1):T.naught] - C.fitted.N.before.Cardinality.matrix[K.temp, (T.prime+1):T.naught])
-  residuals.Cardinality.matrix = rbind(residuals.Cardinality.matrix, c(T.fitted.N.before.Cardinality.matrix[K.temp,] - C.fitted.N.before.Cardinality.matrix[K.temp,], estimated.ATE.Cardinality.matrix[K.temp,]))
   
   #================================#
   #========== Estimation ==========#
