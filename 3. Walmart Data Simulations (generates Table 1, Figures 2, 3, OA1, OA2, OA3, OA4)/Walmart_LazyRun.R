@@ -898,25 +898,6 @@ for(K.temp in changing.K)
   
   estimated.p.value.Cardinality.vector = c(estimated.p.value.Cardinality.vector, permutation.test(blank.period.residuals.Cardinality.matrix[K.temp,], estimated.ATE.Cardinality.matrix[K.temp,], type_ = 0))
   
-  #===Visualization===#
-  plot.l.lim = min(T.fitted.N.before.Cardinality.matrix[K.temp,] - C.fitted.N.before.Cardinality.matrix[K.temp,], T.I.after.Cardinality.matrix[K.temp,] - C.N.after.Cardinality.matrix[K.temp,])
-  plot.u.lim = max(T.fitted.N.before.Cardinality.matrix[K.temp,] - C.fitted.N.before.Cardinality.matrix[K.temp,], T.I.after.Cardinality.matrix[K.temp,] - C.N.after.Cardinality.matrix[K.temp,])
-  
-  my.png.name = as.character(paste0("output/Residuals_", config.name, "Constrained_K=", K.temp, "_", format(Sys.time(), "%Y%m%d"), ".png"))
-  png(filename = my.png.name, width = 1536, height = 768)
-  par(mar=c(9.5,4,0.5,0.5))
-  plot(1:T.total, c(T.fitted.N.before.Cardinality.matrix[K.temp,] - C.fitted.N.before.Cardinality.matrix[K.temp,], T.I.after.Cardinality.matrix[K.temp,] - C.N.after.Cardinality.matrix[K.temp,]), ylim = c(plot.l.lim, plot.u.lim), xlab = "", xaxt = 'n', ylab = "", type = 'l', lwd = 3, main = "", cex = 3, cex.lab = 2, cex.axis = 2)
-  axis(1, at = (1:T.total)[seq(1, T.total, by = 4)], labels = unique.date.names.merged[seq(1, T.total, by = 4)], las = 2, cex.axis = 1.5)
-  abline(h=0, col = 8, lty = 3, lwd = 3)
-  abline(v=T.prime, col = 8, lty = 3, lwd = 4)
-  abline(v=T.naught, col = 8, lty = 3, lwd = 4)
-  text((T.prime/2), plot.u.lim, "fitting periods", col = rgb(0.1, 0.1, 0.1), adj = c(0.5, 0), cex = 2)
-  text(((T.prime+T.naught)/2), plot.u.lim, "blank periods", col = rgb(0.1, 0.1, 0.1), adj = c(0.5, 0), cex = 2)
-  text(((T.naught+T.total)/2), plot.u.lim, "expt periods", col = rgb(0.1, 0.1, 0.1), adj = c(0.25, 0), cex = 2)
-  text(((T.naught+T.total)/2), plot.u.lim, paste0("p value = ", round(estimated.p.value.Cardinality.vector[K.temp], digits = 3)), col = rgb(0.1, 0.1, 0.1), adj = c(0.25, 2), cex = 2)
-  legend("topleft", legend = c("treatment effect estimate"), col = c(1), lty = c(1), lwd = 4, cex = 2)
-  dev.off()
-  
   #--------------------------#
   #--- Conformal Interval ---#
   #--------------------------#
