@@ -167,6 +167,9 @@ This folder contains the Walmart empirical application and the corresponding ran
 - **Output files:** If today is "DATE", the script produces:
   - `Fitted_Constrained_K=1_"DATE".png` → Figure OA1
   - `Residuals_Constrained_K=1_"DATE".png` → Figure OA2
+  - `Fitted_Y_original_no_covariates_weekly_Constrained_K=1_"DATE".png` — sanity check only
+  - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=1_"DATE".png` — sanity check only
+      - Note: K=1 provides a bad fit; see discussions in the paper. 
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 2
   - `ResidualsCI_Y_original_no_covariates_weekly_Constrained_K=2_"DATE".png` → Figure 3
   - `Fitted_Y_original_no_covariates_weekly_Constrained_K=3_"DATE".png` → Figure OA3
