@@ -27,6 +27,8 @@ r.ob.covariates.dim = 7
 F.unob.covariates.dim = 11
 #Population weights --- Vectors
 f.vector = c()
+#for confidence intervals
+alpha.CI = 0.05
 
 #===Model Primitives
 #Constants --- Vectors
@@ -337,6 +339,62 @@ Synthetic_Experiment <- function(T.prime_, r.ob.covariates.dim_, N.Regions_, Y.N
   return(returned)
 }
 
+permutation.test <- function(pre.intervention.residuals, post.intervention.residuals, permutation.SAMPLES_ = 100000, seed_ = 123456, type_ = 0) # default: 0 - all permutations; 1 - sliding window
+{
+  set.seed(seed_)
+  
+  permutation.test.vec = c(abs(pre.intervention.residuals), abs(post.intervention.residuals)) # two sided
+  test.statistic = sum(tail(permutation.test.vec, length(post.intervention.residuals)))
+  
+  if(type_ == 0)
+  {
+    if(choose(length(permutation.test.vec), length(post.intervention.residuals)) <= permutation.SAMPLES_) # find all permutations
+    {
+      combinations.matrix = combn(1:length(permutation.test.vec), length(post.intervention.residuals)) # each column is a combination
+      permutation.statistics = c()
+      for(permu.temp in 1:ncol(combinations.matrix))
+      {
+        permutation.statistics = c(permutation.statistics, sum(permutation.test.vec[combinations.matrix[,permu.temp]]))
+      }
+      returned = sum(permutation.statistics >= test.statistic) / ncol(combinations.matrix)
+    }
+    else #randomly sample permutations
+    {
+      permutation.statistics = c()
+      for(permu.temp in 1:permutation.SAMPLES_)
+      {
+        samples = sample(1:length(permutation.test.vec), length(post.intervention.residuals), replace = FALSE)
+        permutation.statistics = c(permutation.statistics, sum(permutation.test.vec[samples]))
+      }
+      returned = sum(permutation.statistics >= test.statistic) / permutation.SAMPLES_
+    }
+  }
+  
+  if(type_ == 1)
+  {
+    num.permus = length(permutation.test.vec)
+    num.post.intervention = length(post.intervention.residuals)
+    permutation.statistics = c()
+    for(temp.start.permus in 1:num.permus)
+    {
+      temp.indices = seq(temp.start.permus, (temp.start.permus+num.post.intervention-1), 1)
+      temp.indices.truncated = temp.indices - (temp.indices > num.permus) * num.permus
+      permutation.statistics = c(permutation.statistics, sum(permutation.test.vec[temp.indices.truncated]))
+    }
+    returned = sum(permutation.statistics >= test.statistic) / num.permus
+  }
+  
+  return(returned)
+}
+
+quantile_blank <- function(blank.period.residuals_, phi_ = 0.95)
+{
+  abs.values = abs(blank.period.residuals_)
+  length.values = length(blank.period.residuals_)
+  target.value.number = ceiling(length.values * phi_)
+  returned = sort(abs.values)[target.value.number]
+  return(returned)
+}
 
 
 
@@ -379,15 +437,7 @@ ATEC.C.weighted = t(C.weights) %*% Y.I.matrix[,(T.naught+1):T.total] - t(C.weigh
 
 blank.period.residuals = T.fitted.N.before[(T.prime+1):T.naught] - C.fitted.N.before[(T.prime+1):T.naught]
 
-permutation.test.vec = c(abs(blank.period.residuals), abs(estimated.ATE))
-test.statistic = sum(tail(permutation.test.vec, T.total - T.naught))
-combinations.matrix = combn(1:(T.total-T.prime), T.total - T.naught) #each column is a combination
-permutation.statistics = c()
-for(permu.temp in 1:ncol(combinations.matrix))
-{
-  permutation.statistics = c(permutation.statistics, sum(permutation.test.vec[combinations.matrix[,permu.temp]]))
-}
-estimated.p.value = sum(permutation.statistics >= test.statistic) / ncol(combinations.matrix)
+estimated.p.value = permutation.test(abs(blank.period.residuals), abs(estimated.ATE))
 
 # #===Visualization: all===#
 # plot.l.lim = min(population.N.before, population.I.after, population.N.after)*0.95
@@ -446,6 +496,16 @@ legend("bottomleft", legend = c("synthetic treated", "synthetic control", "indiv
 dev.off()
 
 #===Inference===#
+
+#--------------------------#
+#--- Conformal Interval ---#
+#--------------------------#
+
+q.hat.Cardinality.vector = c(quantile_blank(blank.period.residuals, 1-alpha.CI))
+lower.CI.Cardinality.vector = T.I.after - C.N.after - q.hat.Cardinality.vector
+upper.CI.Cardinality.vector = T.I.after - C.N.after + q.hat.Cardinality.vector
+experimental.periods.for.drawing.only = c((T.naught+1):T.total)
+
 plot.l.lim = min(T.fitted.N.before - C.fitted.N.before, T.I.after - C.N.after)
 plot.u.lim = max(T.fitted.N.before - C.fitted.N.before, T.I.after - C.N.after)+3
 
@@ -453,6 +513,9 @@ my.png.name = as.character(paste0("Residuals_NoiseVariance=", noise.variance,".p
 png(filename = my.png.name, width = 1536, height = 768)
 par(mar=c(4.5,5,0.5,0.5))
 plot(1:T.total, c(T.fitted.N.before - C.fitted.N.before, T.I.after - C.N.after), ylim = c(plot.l.lim, plot.u.lim), xlab = "time", ylab = "", type = 'l', lwd = 3, main = "", cex = 3, cex.lab = 2, cex.axis = 2)
+lines(experimental.periods.for.drawing.only, lower.CI.Cardinality.vector, type = 'l', lwd = 3, main = "", cex = 3, cex.lab = 2, cex.axis = 2, col = rgb(0.75, 0.72, 0.70, alpha = 0.6))
+lines(experimental.periods.for.drawing.only, upper.CI.Cardinality.vector, type = 'l', lwd = 3, main = "", cex = 3, cex.lab = 2, cex.axis = 2, col = rgb(0.75, 0.72, 0.70, alpha = 0.6))
+polygon(c(experimental.periods.for.drawing.only, rev(experimental.periods.for.drawing.only)), c(lower.CI.Cardinality.vector, rev(upper.CI.Cardinality.vector)), col = rgb(0.75, 0.72, 0.70, alpha = 0.4), border = NA)
 abline(h=0, col = 8, lty = 3, lwd = 3)
 abline(v=T.prime, col = 8, lty = 3, lwd = 2)
 abline(v=T.naught, col = 8, lty = 3, lwd = 2)
