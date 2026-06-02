@@ -3,7 +3,7 @@
 # Submit job with the command: qsub rjob
 
 # Set the runtime limit (default 12 hours):
-#$ -l h_rt=2:00:00
+#$ -l h_rt=3:00:00
 
 # Specify your project
 #$ -P jinglonggrp
@@ -25,7 +25,7 @@
 
 
 
-# Fpr parallel jobs
+# For parallel jobs
 #$ -pe omp 1
 
 ## end of qsub options

@@ -321,15 +321,220 @@ random_assignments <- function(random.seed_, N.Regions_ = N.Regions, f.vector_ =
               Control.weights = round(control.weights, digits = 8)))
 }
 
-#-----------------------------------------------------#
-#----- Randomization 2: stratified randomization -----#
-#-----------------------------------------------------#
+#=====================================================#
+#===== Randomization 2: stratified randomization =====#
+#=====================================================#
 
 euclidean_distance <- function(point1, point2)
 {
   sqrt(sum((point1 - point2)^2))
 }
 
+my_k_means <- function(random.seed_, N.Regions_ = N.Regions, feature.matrix_, min.size_ = 2, max_iterations_ = 100, tolerence_ = 0.001, K.cardinality_ = -1)
+{
+  if(K.cardinality_ == -1)
+  {
+    K.cardinality = floor(N.Regions_/2)
+  }
+  if(K.cardinality_ >= 1)
+  {
+    K.cardinality = K.cardinality_
+  }
+  
+  feature.matrix_ = apply(feature.matrix_, 2, function(x) (x - mean(x)) / sd(x))
+  
+  my_data = data.frame(feature.matrix_)
+  
+  #-----------------------------------------#
+  #----- Randomly seed the K centroids -----#
+  #----- Then repeat many (100) times  -----#
+  #-----------------------------------------#
+  
+  my.obj.value.vec = rep(NA, max_iterations_)
+  
+  for(times.temp in 1:max_iterations_)
+  {
+    this.seed = random.seed_ * max_iterations_ + times.temp
+    set.seed(this.seed)
+    
+    # Step 1: Initialize centroids randomly
+    centroid.labels = sample(N.Regions_, K.cardinality)
+    centroids = my_data[centroid.labels, ]
+    
+    # Initialize variables
+    iter = 0
+    # Repeat until convergence or max iterations
+    while(iter < max_iterations_) 
+    {
+      cluster_assignments = integer(N.Regions_)
+      
+      # Step 2: Assign each point to the nearest centroid
+      count.size = rep(0, K.cardinality) #Initialize a vector to count how many are there in each cluster
+      distances = matrix(data = NA, nrow = N.Regions_, ncol = K.cardinality)  # Initialize a matrix to store distances
+      # First, calculate the distance of each point to each centroid
+      for(i in 1:N.Regions_)
+      {
+        for(j in 1:K.cardinality)
+        {
+          distances[i,j] = euclidean_distance(my_data[i, ], centroids[j, ])
+        }
+      }
+      define_my_max = round(max(distances), digits = 0) + 2
+      
+      # Second, assign each point to a centroid, make sure that each centroid gets min.size_ many points
+      while(min(distances) < define_my_max)
+      {
+        indices = which(distances == min(distances), arr.ind = TRUE)
+        first.indices = indices[1,]
+        
+        cluster_assignments[first.indices[1]] = first.indices[2]  # Assign to the nearest centroid
+        distances[first.indices[1], ] = define_my_max
+        count.size[first.indices[2]] = count.size[first.indices[2]] + 1
+        if(count.size[first.indices[2]] >= min.size_)
+        {
+          distances[, first.indices[2]] = define_my_max
+        }
+      }
+      
+      #Third, assign all the remaining points to a centroid; need to calculate the distances matrix again
+      distances = matrix(data = NA, nrow = N.Regions_, ncol = K.cardinality)
+      for(i in 1:N.Regions_)
+      {
+        for(j in 1:K.cardinality)
+        {
+          distances[i,j] = euclidean_distance(my_data[i, ], centroids[j, ])
+        }
+      }
+      for(i in which(cluster_assignments == 0))
+      {
+        cluster_assignments[i] = which.min(distances[i, ])
+      }
+      
+      # Step 3: Update centroids as the mean of assigned points
+      prev_centroids = centroids
+      for (j in 1:K.cardinality)
+      {
+        cluster_points = my_data[cluster_assignments == j, ]
+        if(nrow(cluster_points) > 0)
+        {
+          centroids[j, ] = colMeans(cluster_points)
+        }
+      }
+      
+      # Check for convergence (if centroids don't change much)
+      if(all(abs(centroids - prev_centroids) < tolerence_))
+      {
+        break
+      }
+      
+      iter = iter + 1
+    }
+    
+    # Now calculate the objective function (sum of squared distances from each point to its centroid)
+    for(j in 1:K.cardinality)
+    {
+      cluster_points = my_data[cluster_assignments == j, ]
+      if(nrow(cluster_points) > 0)
+      {
+        centroids[j, ] = colMeans(cluster_points)
+      }
+    }
+    obj.distances.vec = rep(NA, N.Regions_)
+    for(i in 1:N.Regions_)
+    {
+      cluster.temp = cluster_assignments[i]
+      obj.distances.vec[i] = euclidean_distance(my_data[i, ], centroids[cluster.temp, ])
+    }
+    my.obj.value.vec[times.temp] = obj.distances.vec %*% obj.distances.vec
+  }
+  
+  this.times.temp = which.min(my.obj.value.vec)
+  
+  this.seed = random.seed_ * max_iterations_ + this.times.temp
+  
+  #----------------------------------------------------------#
+  #----- Now, use the best seed and run the codes again -----#
+  #----------------------------------------------------------#
+  
+  set.seed(this.seed)
+  
+  # Step 1: Initialize centroids randomly
+  centroid.labels = sample(N.Regions_, K.cardinality)
+  centroids = my_data[centroid.labels, ]
+  
+  # Initialize variables
+  iter = 0
+  # Repeat until convergence or max iterations
+  while(iter < max_iterations_) 
+  {
+    cluster_assignments = integer(N.Regions_)
+    
+    # Step 2: Assign each point to the nearest centroid
+    count.size = rep(0, K.cardinality) #Initialize a vector to count how many are there in each cluster
+    distances = matrix(data = NA, nrow = N.Regions_, ncol = K.cardinality)  # Initialize a matrix to store distances
+    # First, calculate the distance of each point to each centroid
+    for(i in 1:N.Regions_)
+    {
+      for(j in 1:K.cardinality)
+      {
+        distances[i,j] = euclidean_distance(my_data[i, ], centroids[j, ])
+      }
+    }
+    define_my_max = round(max(distances), digits = 0) + 2
+    
+    # Second, assign each point to a centroid, make sure that each centroid gets min.size_ many points
+    while(min(distances) < define_my_max)
+    {
+      indices = which(distances == min(distances), arr.ind = TRUE)
+      first.indices = indices[1,]
+      
+      cluster_assignments[first.indices[1]] = first.indices[2]  # Assign to the nearest centroid
+      distances[first.indices[1], ] = define_my_max
+      count.size[first.indices[2]] = count.size[first.indices[2]] + 1
+      if(count.size[first.indices[2]] >= min.size_)
+      {
+        distances[, first.indices[2]] = define_my_max
+      }
+    }
+    
+    #Third, assign all the remaining points to a centroid; need to calculate the distances matrix again
+    distances = matrix(data = NA, nrow = N.Regions_, ncol = K.cardinality)
+    for(i in 1:N.Regions_)
+    {
+      for(j in 1:K.cardinality)
+      {
+        distances[i,j] = euclidean_distance(my_data[i, ], centroids[j, ])
+      }
+    }
+    for(i in which(cluster_assignments == 0))
+    {
+      cluster_assignments[i] = which.min(distances[i, ])
+    }
+    
+    # Step 3: Update centroids as the mean of assigned points
+    prev_centroids = centroids
+    for (j in 1:K.cardinality)
+    {
+      cluster_points = my_data[cluster_assignments == j, ]
+      if(nrow(cluster_points) > 0)
+      {
+        centroids[j, ] = colMeans(cluster_points)
+      }
+    }
+    
+    # Check for convergence (if centroids don't change much)
+    if(all(abs(centroids - prev_centroids) < tolerence_))
+    {
+      break
+    }
+    
+    iter = iter + 1
+  }
+  
+  returned = list(clusters = cluster_assignments,
+                  centroids = centroids)
+  return(returned)
+}
 
 next_power_of_2 <- function(n)
 {
@@ -543,7 +748,7 @@ my_MinMaxDiameter_blocking <- function(random.seed_, N.Regions_ = N.Regions, fea
   # Run the Genetic Algorithm (GA)
   ga_result = ga(
     type = "real-valued",                        # Real-valued parameters
-    fitness = objective_function_GA_alternative,             # Objective function
+    fitness = objective_function_GA_alternative, # Objective function
     lower = rep(1, N.Regions_),                  # Lower bound for each dimension
     upper = rep(K.cardinality+0.1, N.Regions_),  # Upper bound for each dimension
     popSize = popSize_,                          # Population size
@@ -555,41 +760,6 @@ my_MinMaxDiameter_blocking <- function(random.seed_, N.Regions_ = N.Regions, fea
   )
   cluster_assignments = as.integer(ga_result@solution[1,])
   cluster_fitnessValue = - ga_result@fitnessValue
-  
-  # # Run the Genetic Algorithm (GA)
-  # ga_result_alternative = ga(
-  #   type = "real-valued",                        # Real-valued parameters
-  #   fitness = objective_function_GA_alternative, # Objective function
-  #   lower = rep(1, N.Regions_),                  # Lower bound for each dimension
-  #   upper = rep(K.cardinality+0.1, N.Regions_),  # Upper bound for each dimension
-  #   popSize = popSize_,                          # Population size
-  #   maxiter = 100,                               # Maximum number of generations
-  #   run = 50,                                    # Number of iterations without improvement before stopping
-  #   pmutation = 0.5,                             # Mutation probability
-  #   # initialPop = initial_population            # Set the custom initial population
-  #   monitor = FALSE                              # Display progress
-  # )
-  # cluster_assignments_alternative = as.integer(ga_result_alternative@solution[1,])
-  # cluster_fitnessValue_alternative = - ga_result_alternative@fitnessValue
-  # 
-  # if(cluster_fitnessValue_alternative < cluster_fitnessValue)
-  # {
-  #   # Run the Genetic Algorithm (GA)
-  #   ga_result = ga(
-  #     type = "real-valued",                        # Real-valued parameters
-  #     fitness = objective_function_GA_alternative,             # Objective function
-  #     lower = rep(1, N.Regions_),                  # Lower bound for each dimension
-  #     upper = rep(K.cardinality+0.1, N.Regions_),  # Upper bound for each dimension
-  #     popSize = popSize_*10,                       # Population size
-  #     maxiter = 100,                               # Maximum number of generations
-  #     run = 50,                                    # Number of iterations without improvement before stopping
-  #     pmutation = 0.5,                             # Mutation probability
-  #     # initialPop = initial_population            # Set the custom initial population
-  #     monitor = FALSE                              # Display progress
-  #   )
-  #   cluster_assignments = as.integer(ga_result@solution[1,])
-  #   cluster_fitnessValue = - ga_result@fitnessValue
-  # }
   
   return(list(clusters = cluster_assignments,
               fitnessValue = cluster_fitnessValue))
@@ -613,11 +783,9 @@ stratified_assignments <- function(random.seed_, N.Regions_ = N.Regions, f.vecto
   
   if(K.cardinality >= 2)
   {
-    # my.blocks = my_blockTools_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
+    my.blocks = my_MinMaxDiameter_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
     # my.blocks = my_k_means(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
-    
-    # my.blocks = my_MinMaxDiameter_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
-    my.blocks = my_IterMatching_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
+    # my.blocks = my_IterMatching_blocking(random.seed_ = random.seed_, N.Regions_ = N.Regions_, feature.matrix_ = feature.matrix_, K.cardinality_ = K.cardinality)
     
     fitness_ = my.blocks$fitnessValue
     
@@ -658,7 +826,6 @@ stratified_assignments <- function(random.seed_, N.Regions_ = N.Regions, f.vecto
               Control.weights = round(control.weights, digits = 8),
               fitnessValue = fitness_))
 }
-
 
 #---------------------------------------------------#
 #--- We assume that interventions have no effect ---#
@@ -956,7 +1123,5 @@ for(loss.temp in 2:nrow(ATE.RA5NN.report))
 ATE.RA5NN.report.print = cbind(ATE.RA5NN.report, Loss.MAE.RA5NN.vec, Loss.MSE.RA5NN.vec)
 my.file.name.copy = as.character(paste0("output_Randomization/ ", repetition.RANDOM.SEED, "RandomAssignment_RA5NN.txt"))
 write.table(round(ATE.RA5NN.report.print, digits = 3), file = my.file.name.copy, append = FALSE, sep = "\t", col.names=FALSE)
-
-
 
 
