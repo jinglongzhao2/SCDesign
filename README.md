@@ -208,6 +208,7 @@ This folder contains the Walmart empirical application and the corresponding ran
 - **Running time:** Less than 1 minute.
 - **Output file:** If the script is run on `DATE`, it produces:
   - `"DATE"Summary_compare_with_randomization.txt` → Table 1
+      - Note: regression adjustment is the same as difference-in-means estimation because there are no observed covariates; in Table 1 in the paper we did not report this column 
 
 
 ## Folder 4: `Additional Many Simulations (generates Tables OA7, OA8)/`
